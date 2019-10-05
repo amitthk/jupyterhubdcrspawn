@@ -63,23 +63,10 @@ COPY files /tmp/
 
 RUN useradd --no-log-init -u ${ADMIN_UUID} -g 0 -ms /bin/bash ${ADMIN_USER} \
     && echo "${ADMIN_USER_PASS}" | passwd ${ADMIN_USER} --stdin  \
-    && mkdir -p ~/.pip && cp /tmp/pip/pip.conf ~/.pip/pip.conf \ 
-    && cp /tmp/yum/*.repo /etc/yum.repos.d/ \
-    && mkdir -p /etc/pki/rpm-gpg/ && cp /tmp/yum/RPM-GPG-KEY-EPEL-7 /etc/pki/rpm-gpg/
-
-RUN yum install -y wget unzip tar
-    #&& yum install -y glibc glibc-common gcc gcc++  python-setuptools python-ldap java-1.8.0-openjdk java-1.8.0-openjdk-devel
-
+    && mkdir -p ~/.pip && cp /tmp/pip/pip.conf ~/.pip/pip.conf
 
 RUN cd ${APP_ROOT}/ \
-    && export GROUP_URL=`echo "${GROUP_ID}" | tr "." "/"` \
-    && wget ${ARTIFACT_URL} \
-    && tar -xzvf ${APP_ROOT}/${ARTIFACT_ID}-${ARTIFACT_VERSION}.${ARTIFACT_TYPE} \
-    && rm "${APP_ROOT}/${ARTIFACT_ID}-${ARTIFACT_VERSION}.${ARTIFACT_TYPE}" \
-    && pip3 install notebook \
-    && pip3 install jupyterhub \
-    && pip3 install jupyterhub-kubespawner dockerspawner \
-    && pip3 install requests jupyterhub-ldap-authenticator ipyparallel
+    && pip3 install notebook jupyterhub requests ipyparallel
 
 RUN npm install -g configurable-http-proxy
 
@@ -87,8 +74,8 @@ RUN chmod -R 0755 ${APP_ROOT} \
     && mkdir -p ${APP_ROOT}/conf \
     && chown -R ${ADMIN_USER}:root ${APP_ROOT} \
     && cp /tmp/*.sh ${APP_ROOT}/  && chmod 0775 ${APP_ROOT}/*.sh \
-    && chmod g=u /etc/passwd
-#    && cp /tmp/jupyterhub_config.py ${APP_ROOT}/conf/jupyterhub_config.py
+    && chmod g=u /etc/passwd \
+    && cp /tmp/jupyterhub_config.py ${APP_ROOT}/conf/jupyterhub_config.py
 
 
 WORKDIR ${APP_ROOT}
