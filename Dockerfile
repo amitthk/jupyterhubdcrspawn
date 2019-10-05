@@ -62,6 +62,7 @@ USER root
 COPY files /tmp/
 
 RUN useradd --no-log-init -u ${ADMIN_UUID} -g 0 -ms /bin/bash ${ADMIN_USER} \
+    && for USR in $(cat /tmp/users);do useradd --no-log-init -g 0 -ms /bin/bash ${USR};done \
     && echo "${ADMIN_USER_PASS}" | passwd ${ADMIN_USER} --stdin  \
     && mkdir -p ~/.pip && cp /tmp/pip/pip.conf ~/.pip/pip.conf \ 
     && cp /tmp/yum/*.repo /etc/yum.repos.d/ \

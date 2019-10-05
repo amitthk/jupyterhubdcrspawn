@@ -951,7 +951,7 @@ c.JupyterHub.hub_ip = '0.0.0.0'
 c.JupyterHub.hub_connect_ip = '192.168.1.122'
 
 c.JupyterHub.spawner_class = 'jupyterhub.spawner.LocalProcessSpawner'
-c.Authenticator.admin_users = {'admin'}
+c.Authenticator.admin_users = {'professor'}
 #c.DockerSpawner.image = 'amitthk/jupyterhub-singleuser:latest'
 
 c.JupyterHub.authenticator_class = 'ldapauthenticator.LDAPAuthenticator'
