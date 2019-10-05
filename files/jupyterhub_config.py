@@ -951,7 +951,6 @@ c.JupyterHub.hub_ip = '0.0.0.0'
 c.JupyterHub.hub_connect_ip = '192.168.1.122'
 
 c.JupyterHub.spawner_class = 'jupyterhub.spawner.LocalProcessSpawner'
-c.Authenticator.admin_users = {'professor'}
 #c.DockerSpawner.image = 'amitthk/jupyterhub-singleuser:latest'
 
 c.JupyterHub.authenticator_class = 'ldapauthenticator.LDAPAuthenticator'
@@ -969,3 +968,5 @@ c.LDAPAuthenticator.user_search_filter = '(&(objectClass=posixAccount)(uid={user
 # c.LDAPAuthenticator.allow_nested_groups = True
 c.LDAPAuthenticator.create_user_home_dir = True
 c.LDAPAuthenticator.username_pattern = '[a-zA-Z0-9_.][a-zA-Z0-9_.-]{8,20}[a-zA-Z0-9_.$-]?'
+c.Authenticator.delete_invalid_users = True
+c.Authenticator.admin_users = {'professor'}
