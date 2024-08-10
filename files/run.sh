@@ -1,1 +1,1 @@
-jupyterhub -f=${APP_ROOT}/conf/jupyterhub_config.py
+jupyterhub -f=${APP_ROOT}/conf/jupyterhub_config_googleoauth.py

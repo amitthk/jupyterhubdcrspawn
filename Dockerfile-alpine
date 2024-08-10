@@ -1,5 +1,5 @@
-# Use a recent Ubuntu base image with Python 3.8
-FROM ubuntu:22.04
+# Use Alpine Linux as a base image
+FROM python:3.8-alpine
 
 # Set environment variables
 ENV APP_ROOT=/opt/app-root \
@@ -15,30 +15,40 @@ EXPOSE 8000 8081 8888
 
 USER root
 
-# Install required packages and Python
-RUN apt-get update && apt-get install -y \
+# Install required packages and Python dependencies
+RUN apk update && apk add --no-cache \
+    bash \
     wget \
     unzip \
     tar \
-    python3-pip \
-    python3-dev \
     npm \
-    && rm -rf /var/lib/apt/lists/*
+    && pip install --upgrade pip \
+    && apk add --no-cache \
+    libffi-dev \
+    openssl-dev \
+    python3-dev \
+    build-base
 
 # Install Python packages
-RUN pip3 install --upgrade pip \
-    && pip3 install notebook jupyterhub jupyterhub-kubespawner dockerspawner requests jupyterhub-ldap-authenticator ipyparallel oauthenticator \
+RUN pip install \
+    notebook \
+    jupyterhub \
+    jupyterhub-kubespawner \
+    dockerspawner \
+    requests \
+    jupyterhub-ldap-authenticator \
+    ipyparallel \
+    oauthenticator \
     && npm install -g configurable-http-proxy
 
 COPY files /tmp/
-
 # Create user and set up permissions
-RUN useradd --no-log-init -u 10000 -g 0 -ms /bin/bash jupyteradm \
+RUN adduser -D -u 10000 jupyteradm \
     && echo "jupyteradm:jupyteradm" | chpasswd \
     && chmod -R 0755 ${APP_ROOT} \
     && mkdir -p ${APP_ROOT}/conf \
     && chown -R jupyteradm:root ${APP_ROOT} \
-    && cp /tmp/*.sh ${APP_ROOT}/  && chmod 0775 ${APP_ROOT}/*.sh
+    && cp /tmp/*.sh ${APP_ROOT}/ && chmod 0775 ${APP_ROOT}/*.sh
 
 WORKDIR ${APP_ROOT}
 
